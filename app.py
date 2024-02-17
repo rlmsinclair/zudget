@@ -98,6 +98,9 @@ def logout():
     flask_login.logout_user()
     return redirect(url_for('home'))
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_money():
