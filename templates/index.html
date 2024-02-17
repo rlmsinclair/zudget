@@ -1,35 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zudget</title>
-    <link rel="stylesheet" href="/static/css/index.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Zudget</h1>
-        </header>
-        <div class="content">
-            <div class="balances">
-                <div class="balance individual">
-                    <h2>Individual</h2>
-                    <p>£1</p>
-                </div>
-                <div class="vertical-line"></div>
-                <div class="balance group">
-                    <h2>Group</h2>
-                    <p>£5</p>
-                </div>
-            </div>
-            <div class="buttons">
-                <button>Add</button>
-                <button>Withdraw</button>
-                <button>Play</button>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+{% extends "index_layout.html" %}
+{% block title %} Zudget {% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+<h1>Zudget</h1>
+<p class="lead">&#129511; Zudget is a simple budgeting app that allows you to multiply your savings by gambling with your contacts &#129511;</p>
+<p class="lead">
+    <a href="/login" class="btn btn-lg btn-primary fw-bold">Login</a>
+    <a href="/register" class="btn btn-lg btn-primary fw-bold">Register</a>
+</p>
+{% endblock %}

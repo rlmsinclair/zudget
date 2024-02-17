@@ -4,7 +4,7 @@ import flask_login
 from flask_login import UserMixin, LoginManager, login_user
 from flask_sqlalchemy import SQLAlchemy
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
-from wtforms import StringField , PasswordField , SubmitField
+from wtforms import StringField, PasswordField, SubmitField
 from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm
 
@@ -21,7 +21,8 @@ app.config['SECRET_KEY'] = '1234'
 def load_user(user_id):
     with app.app_context():
         return User.query.get(int(user_id))
-    
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -35,6 +36,7 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -42,7 +44,7 @@ def register():
         email = form.email.data
         if User.query.filter_by(email=email).first():  # the query has returned a user
             flash("Email already in use, please log in or use a different email.")
-            return redirect (url_for('register'))
+            return redirect(url_for('register'))
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         new_user = User(email=email, password=hashed_password)
         db.session.add(new_user)
@@ -71,8 +73,8 @@ def login():
 def home():
     user = flask_login.current_user
     if user.is_anonymous:
-        return redirect(url_for('login'))
-    return render_template('index.html')
+        return render_template('index.html')
+    return render_template('home.html')
 
 @app.route('/roulette')
 def roulette():
@@ -82,9 +84,7 @@ def roulette():
 def save():
     pass
 
+
 if __name__ == '__main__':
-    
     app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True)
-
-
