@@ -1,15 +1,15 @@
-from flask import Flask, render_template, session, redirect, request, url_for, flash
+from flask import Flask, render_template, session, redirect, request, url_for, flash, jsonify
 import csv
 import flask_login
 from flask_login import UserMixin, LoginManager, login_user
 from flask_sqlalchemy import SQLAlchemy
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
-from wtforms import StringField , PasswordField , SubmitField
+from wtforms import StringField, PasswordField, SubmitField
 from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm
 
 # graph generator
-from graph_gen import getPastImage, getPopularGraphs
+# from graph_gen import getPastImage, getPopularGraphs
 
 imagePath = r"static/"
 
@@ -28,7 +28,8 @@ app.config['SECRET_KEY'] = '1234'
 def load_user(user_id):
     with app.app_context():
         return User.query.get(int(user_id))
-    
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -57,7 +58,8 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         flash('Registration Successful !')
-        return redirect(url_for('login'))
+        login_user(new_user)
+        return redirect(url_for('home'))
     return render_template('register.html', form=form)
 
 
@@ -67,8 +69,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
-        is_valid = bcrypt.check_password_hash(user.password, password)
-        if user and is_valid:
+        if user is not None and bcrypt.check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('home'))
         else:
@@ -82,6 +83,13 @@ def home():
     if user.is_anonymous:
         return render_template('index.html')
     return render_template('home.html', balance=user.balance)
+
+
+@app.route('/logout')
+def logout():
+    flask_login.logout_user()
+    return redirect(url_for('home'))
+
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_money():
@@ -108,10 +116,28 @@ def withdraw_money():
         return redirect(url_for('home'))
     return render_template('withdraw.html')
 
+
 @app.route('/roulette')
 def roulette():
-    return render_template('roulette.html')
+    user = flask_login.current_user
+    return render_template('roulette.html', balance=user.balance)
 
+
+@app.route('/api/get_balance', methods=['GET'])
+def get_balance():
+    user = flask_login.current_user
+    return jsonify({'balance': user.balance})
+
+
+@app.route('/api/update_balance', methods=['POST'])
+def update_balance():
+    user = flask_login.current_user
+    user.balance = request.json['new_balance']
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'status': 200})
+
+'''
 @app.route("/info")
 def info():
 
@@ -130,27 +156,22 @@ def info():
     
     
     return render_template(
-        "info.html", 
-        
+        "info.html",
         image1=imagePath + pastImageName1,  
-        image2 = imagePath + "image2.jpg",
-        image3 = imagePath + "image3.jpg",
-        image4 = imagePath + "image4.jpg",
-
-        text1 = ''.join([item + "\n" for item in data[0]]),
-        text2 = ''.join([item + "\n" for item in data[1]]),
-        text3 = ''.join([item + "\n" for item in data[2]]),
+        image2=imagePath + "image2.jpg",
+        image3=imagePath + "image3.jpg",
+        image4=imagePath + "image4.jpg",
+        text1=''.join([item + "\n" for item in data[0]]),
+        text2=''.join([item + "\n" for item in data[1]]),
+        text3=''.join([item + "\n" for item in data[2]]),
         )
+
 
 @app.route('/save')
 def save():
     pass
-
-
+'''
 
 if __name__ == '__main__':
-    
     app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True)
-
-
