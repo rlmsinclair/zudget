@@ -1,15 +1,33 @@
 {% extends "layout.html" %}
 {% block title %} Index {% endblock %}
 {% block head %}
+<link href="/static/css/index.css" rel="stylesheet" type="text/css">
+
     {{ super() }}
 {% endblock %}
 {% block content %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Index</h1>
-                <p>Index page</p>
+<div class="container py-5">
+    <header class="text-center mb-4">
+        <h1>Zudget</h1>
+    </header>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6 d-flex border-end">
+            <div class="px-3 text-center w-50">
+                <h2>Individual</h2>
+                <p>£1</p>
+            </div>
+            <div class="px-3 text-center w-50">
+                <h2>Group</h2>
+                <p>£5</p>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="d-grid gap-2 d-md-block">
+                <button class="btn btn-primary mb-2">Add</button>
+                <button class="btn btn-primary mb-2">Withdraw</button>
+                <button class="btn btn-primary mb-2">Play</button>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
