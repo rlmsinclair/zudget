@@ -58,7 +58,8 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         flash('Registration Successful !')
-        return redirect(url_for('login'))
+        login_user(new_user)
+        return redirect(url_for('home'))
     return render_template('register.html', form=form)
 
 
@@ -68,8 +69,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
-        is_valid = bcrypt.check_password_hash(user.password, password)
-        if user and is_valid:
+        if user is not None and bcrypt.check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('home'))
         else:
