@@ -1,0 +1,17 @@
+{% extends "index_layout.html" %}
+{% block title %} Zudget - Login {% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+<main class="w-50 m-auto">
+    <form method="post">
+        <h1>Withdraw Money</h1>
+        <div class="form-floating">
+            <input id="withdraw" class="form-control" type="withdraw" name="withdraw" required>
+            <label for="withdraw">Enter amount to withdraw</label>
+        </div>
+        <button class="btn btn-primary w-100 py-2" type="submit">Withdraw</button>
+    </form>
+</main>
+{% endblock %}

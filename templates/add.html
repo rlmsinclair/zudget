@@ -1,0 +1,17 @@
+{% extends "index_layout.html" %}
+{% block title %} Zudget - Login {% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+<main class="w-50 m-auto">
+    <form method="post">
+        <h1>Add Money</h1>
+        <div class="form-floating">
+            <input id="add" class="form-control" type="add" name="add" required>
+            <label for="add">Enter amount to add</label>
+        </div>
+        <button class="btn btn-primary w-100 py-2" type="submit">Add</button>
+    </form>
+</main>
+{% endblock %}
