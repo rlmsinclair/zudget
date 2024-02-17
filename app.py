@@ -77,7 +77,7 @@ def home():
     user = flask_login.current_user
     if user.is_anonymous:
         return render_template('index.html')
-    return render_template('home.html')
+    return render_template('home.html', balance=user.balance)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_money():
@@ -85,11 +85,24 @@ def add_money():
         user = flask_login.current_user
         money_to_add = request.form['add']
         user.transaction_history = user.transaction_history + money_to_add + ','
-        user.balance = user.balance + int(money_to_add)
+        user.balance = user.balance + float(money_to_add)
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('home'))
     return render_template('add.html')
+
+
+@app.route('/withdraw', methods=['GET', 'POST'])
+def withdraw_money():
+    if request.method == 'POST':
+        user = flask_login.current_user
+        money_to_withdraw = request.form['withdraw']
+        user.transaction_history = user.transaction_history + "-" + money_to_withdraw + ','
+        user.balance = user.balance - float(money_to_withdraw)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('withdraw.html')
 
 @app.route('/roulette')
 def roulette():
