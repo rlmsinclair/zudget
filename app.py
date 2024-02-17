@@ -74,6 +74,9 @@ def home():
         return redirect(url_for('login'))
     return render_template('index.html')
 
+@app.route('/roulette')
+def roulette():
+    return render_template('roulette.html')
 
 @app.route('/save')
 def save():
