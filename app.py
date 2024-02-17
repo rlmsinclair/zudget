@@ -33,6 +33,8 @@ def load_user(user_id):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
+    group = db.Column(db.String(50), unique=False, nullable=False)
+    group_balance = db.Column(db.Float, unique=False, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     balance = db.Column(db.Integer, nullable=False)
     transaction_history = db.Column(db.String(4096), nullable=False)
@@ -41,6 +43,7 @@ class User(UserMixin, db.Model):
 # Registration Form
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(min=5, max=50)])
+    group = StringField('Group', validators=[DataRequired(), Length(min=1, max=50)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=50)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
@@ -50,11 +53,16 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         email = form.email.data
+        group = form.group.data
         if User.query.filter_by(email=email).first():  # the query has returned a user
             flash("Email already in use, please log in or use a different email.")
             return redirect (url_for('register'))
+        if User.query.filter_by(group=group).first():
+            group_balance = User.query.filter_by(group=group).first().group_balance
+        else:
+            group_balance = 0
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        new_user = User(email=email, password=hashed_password, balance=0, transaction_history='0,')
+        new_user = User(email=email, group=group, group_balance=group_balance, password=hashed_password, balance=0, transaction_history='0,')
         db.session.add(new_user)
         db.session.commit()
         flash('Registration Successful !')
@@ -82,7 +90,7 @@ def home():
     user = flask_login.current_user
     if user.is_anonymous:
         return render_template('index.html')
-    return render_template('home.html', balance=user.balance)
+    return render_template('home.html', balance=user.balance, group_balance=user.group_balance)
 
 
 @app.route('/logout')
@@ -116,6 +124,18 @@ def withdraw_money():
         return redirect(url_for('home'))
     return render_template('withdraw.html')
 
+
+@app.route('/transfer', methods=['GET', 'POST'])
+def transfer_money():
+    if request.method == 'POST':
+        user = flask_login.current_user
+        money_to_transfer = request.form['transfer']
+        user.balance = user.balance - float(money_to_transfer)
+        user.group_balance = user.group_balance + float(money_to_transfer)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('transfer.html')
 
 @app.route('/roulette')
 def roulette():

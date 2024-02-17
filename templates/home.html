@@ -2,6 +2,8 @@
 {% block title %} Index {% endblock %}
 {% block head %}
 <link href="/static/css/index.css" rel="stylesheet" type="text/css">
+<link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
     {{ super() }}
 {% endblock %}
 {% block content %}
@@ -17,13 +19,14 @@
             </div>
             <div class="px-3 text-center w-50">
                 <h2>Group</h2>
-                <p>£5</p>
+                <p>£ {{ group_balance }}</p>
             </div>
         </div>
         <div class="col-md-3 text-center">
             <div class="d-grid gap-2 d-md-block">
                 <button class="btn btn-primary mb-2" onclick="location.href='/add';" value="Add">Add</button>
                 <button class="btn btn-primary mb-2" onclick="location.href='/withdraw';" value="Withdraw">Withdraw</button>
+                <button class="btn btn-primary mb-2" onclick="location.href='/transfer';" value="Transfer to Group">Transfer to Group</button>
                 <button class="btn btn-primary mb-2" onclick="location.href='/roulette';" value="Play">Play</button>
             </div>
         </div>

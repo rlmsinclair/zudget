@@ -1,0 +1,17 @@
+{% extends "index_layout.html" %}
+{% block title %} Zudget - Login {% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+<main class="w-50 m-auto">
+    <form method="post">
+        <h1>Transfer Money</h1>
+        <div class="form-floating">
+            <input id="transfer" class="form-control" type="transfer" name="transfer" required>
+            <label for="transfer">Enter amount to transfer to group</label>
+        </div>
+        <button class="btn btn-primary w-100 py-2" type="submit">Transfer to Group</button>
+    </form>
+</main>
+{% endblock %}
