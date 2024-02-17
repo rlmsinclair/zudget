@@ -7,6 +7,7 @@ from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from wtforms import StringField, PasswordField, SubmitField
 from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm
+import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://doadmin:AVNS_JkvcfAiuwN-gsSf6K0c@app-784b9fa7-3b44-405e-9170-d80f0dd5e72d-do-user-14798294-0.c.db.ondigitalocean.com:25060/defaultdb?sslmode=require'
@@ -27,6 +28,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    balance = db.Column(db.Integer, nullable=False)
+    transaction_history = db.Column(db.String(4096), nullable=False)
 
 
 # Registration Form
@@ -46,7 +49,7 @@ def register():
             flash("Email already in use, please log in or use a different email.")
             return redirect(url_for('register'))
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        new_user = User(email=email, password=hashed_password)
+        new_user = User(email=email, password=hashed_password, balance=0, transaction_history='0,')
         db.session.add(new_user)
         db.session.commit()
         flash('Registration Successful !')
@@ -75,6 +78,18 @@ def home():
     if user.is_anonymous:
         return render_template('index.html')
     return render_template('home.html')
+
+@app.route('/add', methods=['GET', 'POST'])
+def add_money():
+    if request.method == 'POST':
+        user = flask_login.current_user
+        money_to_add = request.form['add']
+        user.transaction_history = user.transaction_history + money_to_add + ','
+        user.balance = user.balance + int(money_to_add)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('add.html')
 
 @app.route('/roulette')
 def roulette():
