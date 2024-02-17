@@ -530,6 +530,7 @@ function spin(){
 		numbersBet = [];
 		removeChips();
 		wager = lastWager;
+		updateBankValue(bankValue);
 		if(bankValue == 0 && currentBet == 0){
 			gameOver();
 		}
