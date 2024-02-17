@@ -1,3 +1,70 @@
-body {
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f3f3f3;
+}
+
+.container {
     text-align: center;
+    width: 90%; /* Increase container width */
+}
+
+header h1 {
+    font-size: 4em; /* Increase heading size */
+    margin-bottom: 0.5em;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.balances {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-around;
+    align-items: center;
+    padding: 40px; /* Increase padding */
+    border: 3px solid black; /* Thicker border */
+    margin-right: 20px;
+}
+
+.balance h2 {
+    font-size: 2em; /* Increase balance heading size */
+    text-align: center;
+    padding: 0 20px;
+}
+
+.balance p {
+    font-size: 1.5em; /* Increase balance amount size */
+}
+
+.vertical-line {
+    border-left: 3px solid black; /* Thicker line */
+    height: 150px; /* Taller line */
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+button {
+    padding: 15px 30px; /* Increase button padding */
+    margin-bottom: 20px; /* Increase space between buttons */
+    font-size: 1.2em; /* Increase button font size */
+    cursor: pointer;
+    border: 2px solid black; /* Add border to buttons */
+    background: #fff;
+    transition: background-color 0.3s ease; /* Add a transition effect */
+}
+
+button:hover {
+    background-color: #e6e6e6; /* Change background color on hover */
 }
