@@ -33,6 +33,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    balance = db.Column(db.Integer, nullable=False)
+    transaction_history = db.Column(db.String(4096), nullable=False)
 
 
 # Registration Form
@@ -51,7 +53,7 @@ def register():
             flash("Email already in use, please log in or use a different email.")
             return redirect (url_for('register'))
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        new_user = User(email=email, password=hashed_password)
+        new_user = User(email=email, password=hashed_password, balance=0, transaction_history='0,')
         db.session.add(new_user)
         db.session.commit()
         flash('Registration Successful !')
@@ -78,8 +80,33 @@ def login():
 def home():
     user = flask_login.current_user
     if user.is_anonymous:
-        return redirect(url_for('login'))
-    return render_template('index.html')
+        return render_template('index.html')
+    return render_template('home.html', balance=user.balance)
+
+@app.route('/add', methods=['GET', 'POST'])
+def add_money():
+    if request.method == 'POST':
+        user = flask_login.current_user
+        money_to_add = request.form['add']
+        user.transaction_history = user.transaction_history + money_to_add + ','
+        user.balance = user.balance + float(money_to_add)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('add.html')
+
+
+@app.route('/withdraw', methods=['GET', 'POST'])
+def withdraw_money():
+    if request.method == 'POST':
+        user = flask_login.current_user
+        money_to_withdraw = request.form['withdraw']
+        user.transaction_history = user.transaction_history + "-" + money_to_withdraw + ','
+        user.balance = user.balance - float(money_to_withdraw)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('withdraw.html')
 
 @app.route('/roulette')
 def roulette():
