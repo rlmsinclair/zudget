@@ -9,7 +9,7 @@ from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://doadmin:AVNS_Ed7FVk0dyVGlhXuZmb4@db-postgresql-lon1-41546-do-user-14798294-0.c.db.ondigitalocean.com:25060/defaultdb?sslmode=require'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://doadmin:AVNS_JkvcfAiuwN-gsSf6K0c@app-784b9fa7-3b44-405e-9170-d80f0dd5e72d-do-user-14798294-0.c.db.ondigitalocean.com:25060/defaultdb?sslmode=require'
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -59,7 +59,7 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
         is_valid = bcrypt.check_password_hash(user.password, password)
-        if user and is_valid and user.is_confirmed:
+        if user and is_valid:
             login_user(user)
             return redirect(url_for('home'))
         else:
