@@ -48,6 +48,7 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -56,7 +57,7 @@ def register():
         group = form.group.data
         if User.query.filter_by(email=email).first():  # the query has returned a user
             flash("Email already in use, please log in or use a different email.")
-            return redirect (url_for('register'))
+            return redirect(url_for('register'))
         if User.query.filter_by(group=group).first():
             group_balance = User.query.filter_by(group=group).first().group_balance
         else:
@@ -98,9 +99,11 @@ def logout():
     flask_login.logout_user()
     return redirect(url_for('home'))
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_money():
@@ -140,6 +143,7 @@ def transfer_money():
         return redirect(url_for('home'))
     return render_template('transfer.html')
 
+
 @app.route('/roulette')
 def roulette():
     user = flask_login.current_user
@@ -155,6 +159,7 @@ def get_balance():
 @app.route('/api/update_balance', methods=['POST'])
 def update_balance():
     user = flask_login.current_user
+    user.group_balance = user.group_balance + (user.balance - request.json['new_balance'])
     user.balance = request.json['new_balance']
     db.session.add(user)
     db.session.commit()
