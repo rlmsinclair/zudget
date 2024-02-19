@@ -1,1 +1,14 @@
-{% extends "layout.html" %} 
+{% extends "layout.html" %}
+{% block title %} About {% endblock %}
+{% block head %}
+<link href="/static/css/index.css" rel="stylesheet" type="text/css">
+    {{ super() }}
+{% endblock %}
+{% block content %}
+<header class="text-center mb-4">
+    <img class="logo" src="static/zudget.png">
+</header>
+<p>
+    Zudget is a gamified budgeting web app that allows users to save money in a group pot by gambling. What's your Zudget?
+</p>
+{% endblock %}
