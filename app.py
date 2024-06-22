@@ -14,7 +14,7 @@ from flask_wtf import FlaskForm
 imagePath = r"static/"
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://doadmin:AVNS_JkvcfAiuwN-gsSf6K0c@app-784b9fa7-3b44-405e-9170-d80f0dd5e72d-do-user-14798294-0.c.db.ondigitalocean.com:25060/defaultdb?sslmode=require'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://doadmin:AVNS_NLJa7sxb60hiFT7qSOc@db-postgresql-lon1-45155-do-user-14798294-0.c.db.ondigitalocean.com:25060/defaultdb?sslmode=require'
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
